@@ -34,6 +34,16 @@ public class CatalogoFrm extends javax.swing.JFrame {
     public void obtenerCatalogo() {
         DefaultTableModel catalogo = this.m_CatalogoNegocio.listarCatalogo();
         tableCatalogo.setModel(catalogo);
+        tableCatalogo.removeColumn(tableCatalogo.getColumn("id"));
+    }
+
+    /**
+     *
+     * @param id
+     * @return 
+     */
+    public float getPrecio(int id) {
+        return m_CatalogoNegocio.getPrecio(id);
     }
 
     /**
@@ -48,6 +58,7 @@ public class CatalogoFrm extends javax.swing.JFrame {
         lblCatalogo = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
         tableCatalogo = new javax.swing.JTable();
+        lblPrecio = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -64,7 +75,14 @@ public class CatalogoFrm extends javax.swing.JFrame {
                 "Marca", "Modelo", "Ano"
             }
         ));
+        tableCatalogo.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tableCatalogoMouseClicked(evt);
+            }
+        });
         jScrollPane1.setViewportView(tableCatalogo);
+
+        lblPrecio.setText("Precio: XXXXX $");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -73,25 +91,37 @@ public class CatalogoFrm extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 375, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
                         .addGap(157, 157, 157)
                         .addComponent(lblCatalogo))
                     .addGroup(layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 375, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(139, 139, 139)
+                        .addComponent(lblPrecio)))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(22, 22, 22)
+                .addContainerGap()
                 .addComponent(lblCatalogo)
-                .addGap(18, 18, 18)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 246, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(lblPrecio)
+                .addGap(34, 34, 34)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 225, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(12, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void tableCatalogoMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tableCatalogoMouseClicked
+        int fila = tableCatalogo.getSelectedRow();
+        DefaultTableModel catalogo = (DefaultTableModel) tableCatalogo.getModel();
+        float precio = getPrecio((int) catalogo.getValueAt(fila, 0));
+        lblPrecio.setText("Precio: " + precio + " $");
+    }//GEN-LAST:event_tableCatalogoMouseClicked
 
     /**
      * @param args the command line arguments
@@ -131,6 +161,7 @@ public class CatalogoFrm extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JLabel lblCatalogo;
+    private javax.swing.JLabel lblPrecio;
     private javax.swing.JTable tableCatalogo;
     // End of variables declaration//GEN-END:variables
 }

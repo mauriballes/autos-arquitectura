@@ -23,12 +23,50 @@ public class Auto {
     private int id;
     private String modelo;
     private int ano;
+    private float precio;
     private int marca_id;
 
     private Conexion m_Conexion;
 
     public Auto() {
         this.m_Conexion = Conexion.getInstancia();
+    }
+
+    /**
+     *
+     * @param id
+     */
+    public Auto getAuto(int id) {
+        this.m_Conexion.abrirConexion();
+        Connection con = this.m_Conexion.getConexion();
+        Auto auto = null;
+        String sql = "SELECT \n"
+                + "imcruz.autos.id,\n"
+                + "imcruz.autos.modelo,\n"
+                + "imcruz.autos.ano,\n"
+                + "imcruz.autos.precio,\n"
+                + "imcruz.autos.marca_id\n"
+                + "FROM imcruz.autos\n"
+                + "WHERE imcruz.autos.id = " + id;
+        PreparedStatement ps;
+        try {
+            ps = con.prepareStatement(sql);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                auto = new Auto();
+                auto.setAuto(
+                        rs.getInt("id"),
+                        rs.getString("modelo"),
+                        rs.getInt("ano"),
+                        rs.getFloat("precio"),
+                        rs.getInt("marca_id")
+                );
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(Auto.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        this.m_Conexion.cerrarConexion();
+        return auto;
     }
 
     public LinkedList<Auto> getAutos() {
@@ -39,6 +77,7 @@ public class Auto {
                 + "imcruz.autos.id,\n"
                 + "imcruz.autos.modelo,\n"
                 + "imcruz.autos.ano,\n"
+                + "imcruz.autos.precio,\n"
                 + "imcruz.autos.marca_id\n"
                 + "FROM imcruz.autos";
         PreparedStatement ps;
@@ -51,6 +90,7 @@ public class Auto {
                         rs.getInt("id"),
                         rs.getString("modelo"),
                         rs.getInt("ano"),
+                        rs.getFloat("precio"),
                         rs.getInt("marca_id")
                 );
                 autos.add(auto);
@@ -68,11 +108,12 @@ public class Auto {
         int generate_Id = 0;
         try {
             PreparedStatement ps = con.prepareStatement(
-                    "INSERT INTO imcruz.autos(modelo,ano,marca_id)\n"
-                    + "VALUES (?,?,?)", Statement.RETURN_GENERATED_KEYS);
+                    "INSERT INTO imcruz.autos(modelo,ano,precio,marca_id)\n"
+                    + "VALUES (?,?,?,?)", Statement.RETURN_GENERATED_KEYS);
             ps.setString(1, this.modelo);
             ps.setInt(2, this.ano);
-            ps.setInt(3, this.marca_id);
+            ps.setFloat(3, this.precio);
+            ps.setInt(4, this.marca_id);
             int rows = ps.executeUpdate();
             if (rows != 0) {
                 ResultSet generateKeys = ps.getGeneratedKeys();
@@ -94,13 +135,15 @@ public class Auto {
             String sql = "UPDATE imcruz.autos \n"
                     + "SET imcruz.autos.modelo = ?,\n"
                     + "imcruz.autos.ano = ?,\n"
+                    + "imcruz.autos.precio = ?,\n"
                     + "imcruz.autos.marca_id = ?\n"
                     + "WHERE imcruz.autos.id = ?";
             PreparedStatement ps = con.prepareStatement(sql);
             ps.setString(1, this.modelo);
             ps.setInt(2, this.ano);
-            ps.setInt(3, this.marca_id);
-            ps.setInt(4, this.id);
+            ps.setFloat(3, this.precio);
+            ps.setInt(4, this.marca_id);
+            ps.setInt(5, this.id);
             int rows = ps.executeUpdate();
         } catch (SQLException ex) {
             Logger.getLogger(Auto.class.getName()).log(Level.SEVERE, null, ex);
@@ -112,11 +155,13 @@ public class Auto {
      *
      * @param modelo
      * @param ano
+     * @param precio
      * @param marca_id
      */
-    public void setAuto(String modelo, int ano, int marca_id) {
+    public void setAuto(String modelo, int ano, float precio, int marca_id) {
         this.modelo = modelo;
         this.ano = ano;
+        this.precio = precio;
         this.marca_id = marca_id;
     }
 
@@ -125,12 +170,14 @@ public class Auto {
      * @param id
      * @param modelo
      * @param ano
+     * @param precio
      * @param marca_id
      */
-    public void setAuto(int id, String modelo, int ano, int marca_id) {
+    public void setAuto(int id, String modelo, int ano, float precio, int marca_id) {
         this.id = id;
         this.modelo = modelo;
         this.ano = ano;
+        this.precio = precio;
         this.marca_id = marca_id;
     }
 
@@ -148,6 +195,10 @@ public class Auto {
 
     public int getMarca_id() {
         return marca_id;
+    }
+
+    public float getPrecio() {
+        return precio;
     }
 
 }

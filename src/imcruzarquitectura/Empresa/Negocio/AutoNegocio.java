@@ -21,15 +21,25 @@ public class AutoNegocio {
         this.m_Auto = new Auto();
     }
 
+    /**
+     *
+     * @param id
+     * @return 
+     */
+    public Auto obtenerAuto(int id) {
+        return m_Auto.getAuto(id);
+    }
+
     public DefaultTableModel obtenerAutos() {
         DefaultTableModel autos = new DefaultTableModel();
-        autos.setColumnIdentifiers(new Object[]{"id", "modelo", "ano", "marca_id"});
+        autos.setColumnIdentifiers(new Object[]{"id", "modelo", "ano", "precio", "marca_id"});
         LinkedList<Auto> autosList = this.m_Auto.getAutos();
         for (Auto auto : autosList) {
             autos.addRow(new Object[]{
                 auto.getId(),
                 auto.getModelo(),
                 auto.getAno(),
+                auto.getPrecio(),
                 auto.getMarca_id()
             });
         }
@@ -40,11 +50,12 @@ public class AutoNegocio {
      *
      * @param modelo
      * @param ano
+     * @param precio
      * @param marca_id
      * @return
      */
-    public int insertarAuto(String modelo, int ano, int marca_id) {
-        this.m_Auto.setAuto(modelo, ano, marca_id);
+    public int insertarAuto(String modelo, int ano, float precio, int marca_id) {
+        this.m_Auto.setAuto(modelo, ano, precio, marca_id);
         return this.m_Auto.insertarAuto();
     }
 
@@ -53,10 +64,11 @@ public class AutoNegocio {
      * @param id
      * @param modelo
      * @param ano
+     * @param precio
      * @param marca_id
      */
-    public void modificarAuto(int id, String modelo, int ano, int marca_id) {
-        this.m_Auto.setAuto(id, modelo, ano, marca_id);
+    public void modificarAuto(int id, String modelo, int ano, float precio, int marca_id) {
+        this.m_Auto.setAuto(id, modelo, ano, precio, marca_id);
         this.m_Auto.modificarAuto();
     }
 }

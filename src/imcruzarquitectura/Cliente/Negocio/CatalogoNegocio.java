@@ -23,4 +23,13 @@ public class CatalogoNegocio {
     public DefaultTableModel listarCatalogo() {
         return this.m_CatalogoFacade.listarCatalogo();
     }
+
+    /**
+     *
+     * @param id
+     * @return 
+     */
+    public float getPrecio(int id) {
+        return m_CatalogoFacade.getPrecio(id);
+    }
 }
