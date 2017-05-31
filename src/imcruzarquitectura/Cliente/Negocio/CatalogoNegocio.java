@@ -21,7 +21,24 @@ public class CatalogoNegocio {
     }
 
     public DefaultTableModel listarCatalogo() {
-        return this.m_CatalogoFacade.listarCatalogo();
+        DefaultTableModel autos = this.m_CatalogoFacade.obtenerAutos();
+        DefaultTableModel marcas = this.m_CatalogoFacade.obtenerMarcas();
+        DefaultTableModel autosCatalogo = new DefaultTableModel();
+        autosCatalogo.setColumnIdentifiers(new Object[]{"id","Marca", "Modelo", "Ano"});
+        for (int i = 0; i < marcas.getRowCount(); i++) {
+            for (int j = 0; j < autos.getRowCount(); j++) {
+                // if marca_id (auto) == id (marca)
+                if ((int) autos.getValueAt(j, 4) == (int) marcas.getValueAt(i, 0)) {
+                    autosCatalogo.addRow(new Object[]{
+                        autos.getValueAt(j, 0), // id
+                        marcas.getValueAt(i, 1), // Marca
+                        autos.getValueAt(j, 1), // Modelo
+                        autos.getValueAt(j, 2) // Ano
+                    });
+                }
+            }
+        }
+        return autosCatalogo;
     }
 
     /**
@@ -30,6 +47,9 @@ public class CatalogoNegocio {
      * @return 
      */
     public float getPrecio(int id) {
-        return m_CatalogoFacade.getPrecio(id);
+        DefaultTableModel auto = this.m_CatalogoFacade.obtenerAuto(id);
+        int columnaPrecio = 3; // Precio
+        float precio = (float) auto.getValueAt(0, columnaPrecio);
+        return precio;
     }
 }

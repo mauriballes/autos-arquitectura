@@ -26,8 +26,18 @@ public class AutoNegocio {
      * @param id
      * @return 
      */
-    public Auto obtenerAuto(int id) {
-        return m_Auto.getAuto(id);
+    public DefaultTableModel obtenerAuto(int id) {
+        DefaultTableModel auto = new DefaultTableModel();
+        Auto autoDatos = m_Auto.getAuto(id);
+        auto.setColumnIdentifiers(new Object[]{"id", "modelo", "ano", "precio", "marca_id"});
+        auto.addRow(new Object[]{
+            autoDatos.getId(),
+            autoDatos.getModelo(),
+            autoDatos.getAno(),
+            autoDatos.getPrecio(),
+            autoDatos.getMarca_id()
+        });
+        return auto;
     }
 
     public DefaultTableModel obtenerAutos() {
